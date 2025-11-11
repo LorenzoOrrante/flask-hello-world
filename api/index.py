@@ -47,7 +47,7 @@ def sensor():
 @app.route("/sensor/<int:sensor_id>")
 def get_sensor(sensor_id):
     try:
-        conn = get_connection()
+        connection = psycopg2.connect(CONNECTION_STRING)
         cur = conn.cursor()
 
         # Get the latest 10 values
