@@ -71,3 +71,7 @@ def insert_sensor_value(sensor_id):
         return f"Current Time: {result}"
     except Exception as e:
         return f"Failed to connect: {e}"
+
+@app.route('/pagina')
+def pagina():
+    return render_template("pagina.html")
