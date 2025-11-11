@@ -1,34 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <title>Mi página con estilo</title>
-  <style>
-    /* Estilos para todos los encabezados h1 */
-    h1 {
-      color: red;
-      padding: 60px;
-    }
-    
-    /* Estilos para todos los párrafos */
-    p {
-      color: blue;
-      background-color: lightyellow;
-    }
-
-    /* Estilo para un enlace en particular */
-    a {
-      text-decoration: none; /* Quita el subrayado */
-    }
-    
-    /* Estilo para cuando pasas el ratón por encima del enlace */
-    a:hover {
-      text-decoration: underline; /* Subraya al pasar el ratón */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML con Estilo</title>
+    <style>
+        /* Estilo interno usando la etiqueta <style> */
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+        h1 {
+            color: navy;
+            text-align: center;
+        }
+        p {
+            color: #333;
+            line-height: 1.5;
+        }
+        .destacado {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-  <h1>¡Hola, mundo!</h1>
-  <p>Este es un párrafo con un estilo de fondo amarillo claro.</p>
-  <a href="#">Este es un enlace</a>
+
+    <h1>Título de la Página</h1>
+    <p>Este es un párrafo de ejemplo con estilo interno. La fuente es sans-serif, el fondo es gris claro y el título está centrado en color navy.</p>
+    
+    <p>Este párrafo también tiene estilos de <span class="destacado">estilo interno</span>, pero el texto dentro de la etiqueta &lt;span&gt; tiene una clase llamada "destacado" y se verá de color verde y en negrita.</p>
+
 </body>
 </html>
