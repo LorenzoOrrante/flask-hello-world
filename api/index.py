@@ -100,3 +100,32 @@ def dashboard():
     # Usar render_template para cargar dashboard.html
     # La variable 'sensor_ids' es accesible en el HTML.
     return render_template("dashboard.html", sensor_ids=sensor_ids)
+
+@app.route("/sensor/<int:sensor_id>")
+def get_sensor(sensor_id):
+    try:
+        conn = psycopg2.connect(CONNECTION_STRING)
+        cur = conn.cursor()
+
+        # Get the latest 10 values
+        cur.execute("""
+            SELECT value, created_at
+            FROM sensores
+            WHERE sensor_id = %s
+            ORDER BY created_at DESC
+            LIMIT 10;
+        """, (sensor_id,))
+        rows = cur.fetchall()
+
+        # Convert to lists for graph
+        values = [r[0] for r in rows][::-1]        # reverse for chronological order
+        timestamps = [r[1].strftime('%Y-%m-%d %H:%M:%S') for r in rows][::-1]
+        
+        return jsonify(sensor_id=sensor_id, values=values, timestamps=timestamps)
+        
+    except Exception as e:
+        return f"<h3>Error: {e}</h3>"
+
+    finally:
+        if 'conn' in locals():
+            conn.close()
