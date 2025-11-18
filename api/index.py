@@ -46,35 +46,6 @@ def sensor():
 def pagina():
     return render_template("pagina.html", user="Carlos")
 
-# app.py (o index.py)
-
-# ... (otras importaciones y rutas)
-
-@app.route('/dashboard')
-def dashboard():
-    sensor_ids = []
-    conn = None
-    try:
-        conn = psycopg2.connect(CONNECTION_STRING)
-        cur = conn.cursor()
-        
-        # Obtener IDs de sensores
-        cur.execute("SELECT DISTINCT sensor_id FROM sensores ORDER BY sensor_id ASC;")
-        sensor_ids = [row[0] for row in cur.fetchall()]
-        
-        cur.close()
-    except Exception as e:
-        print(f"Error al cargar datos del dashboard: {e}")
-        
-    finally:
-        if conn:
-            conn.close()
-
-    # Usar render_template para cargar dashboard.html
-    # La variable 'sensor_ids' es accesible en el HTML.
-    return render_template("dashboard.html", sensor_ids=sensor_ids)
-
-# ... (otras rutas y tu ruta /sensor/<int:sensor_id> que debe devolver JSON)
 
 @app.route("/sensor/<int:sensor_id>", methods=["POST"])
 def insert_sensor_value(sensor_id):
@@ -135,3 +106,27 @@ def get_sensor(sensor_id):
     finally:
         if 'conn' in locals():
             conn.close()
+
+@app.route('/dashboard')
+def dashboard():
+    sensor_ids = []
+    conn = None
+    try:
+        conn = psycopg2.connect(CONNECTION_STRING)
+        cur = conn.cursor()
+        
+        # Obtener IDs de sensores
+        cur.execute("SELECT DISTINCT sensor_id FROM sensores ORDER BY sensor_id ASC;")
+        sensor_ids = [row[0] for row in cur.fetchall()]
+        
+        cur.close()
+    except Exception as e:
+        print(f"Error al cargar datos del dashboard: {e}")
+        
+    finally:
+        if conn:
+            conn.close()
+
+    # Usar render_template para cargar dashboard.html
+    # La variable 'sensor_ids' es accesible en el HTML.
+    return render_template("dashboard.html", sensor_ids=sensor_ids)
