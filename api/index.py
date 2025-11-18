@@ -99,4 +99,4 @@ def dashboard():
 
     # Usar render_template para cargar dashboard.html
     # La variable 'sensor_ids' es accesible en el HTML.
-    return render_template("dashboard.html", sensores=sensores)
+    return render_template("dashboard.html", sensor_ids=sensor_ids)
