@@ -18,9 +18,9 @@ def home():
 def about():
     return 'About'
 
-
 @app.route('/sensor')
 def sensor():
+        
     # Connect to the database
     try:
         connection = psycopg2.connect(CONNECTION_STRING)
@@ -30,23 +30,25 @@ def sensor():
         cursor = connection.cursor()
         
         # Example query
-        cursor.execute("select * from sensores;")
+        cursor.execute("select * from sensores")
         result = cursor.fetchone()
         print("Current Time:", result)
-
+    
         # Close the cursor and connection
         cursor.close()
         connection.close()
         print("Connection closed.")
-        return f"Connection successful! {result}"
-
+        return f"Current Time:{result}"
     except Exception as e:
-        print(f"Failed to connect: {e}")
-        return f"Failed to connect: {e}"
+        return(f"Failed to connect: {e}")
 
 @app.route('/pagina')
 def pagina():
-    return render_template("pagina.html", user="Miguel")
+    return render_template("pagina.html", user="Carlos")
+
+# app.py (o index.py)
+
+# ... (otras importaciones y rutas)
 
 @app.route('/dashboard')
 def dashboard():
@@ -71,6 +73,39 @@ def dashboard():
     # Usar render_template para cargar dashboard.html
     # La variable 'sensor_ids' es accesible en el HTML.
     return render_template("dashboard.html", sensor_ids=sensor_ids)
+
+# ... (otras rutas y tu ruta /sensor/<int:sensor_id> que debe devolver JSON)
+
+@app.route("/sensor/<int:sensor_id>", methods=["POST"])
+def insert_sensor_value(sensor_id):
+    value = request.args.get("value", type=float)
+    if value is None:
+        return jsonify({"error": "Missing 'value' query parameter"}), 400
+
+    try:
+        connection = psycopg2.connect(CONNECTION_STRING)
+        print("Connection successful!")
+        cursor = connection.cursor()
+
+        # Insert into sensors table
+        cursor.execute(
+            "INSERT INTO sensores (sensor_id, value) VALUES (%s, %s)",
+            (sensor_id, value)
+        )
+        connection.commit()
+
+        return jsonify({
+            "message": "Sensor value inserted successfully",
+            "sensor_id": sensor_id,
+            "value": value
+        }), 201
+
+    except psycopg2.Error as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if 'connection' in locals():
+            connection.close()
 
 @app.route("/sensor/<int:sensor_id>")
 def get_sensor(sensor_id):
